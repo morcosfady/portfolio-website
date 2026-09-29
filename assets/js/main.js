@@ -64,6 +64,15 @@ scrollTopBtn.addEventListener('click', () => {
 /* To add a project later: add its card in index.html, then add a matching
    entry here keyed by the same data-project value used on its Read More button. */
 const PROJECT_DETAILS = {
+  'aws-hub-spoke-network': {
+    title: 'AWS Hub-and-Spoke Network (Terraform)',
+    overview: 'A hub-and-spoke network on AWS built entirely with Terraform: a Shared services VPC (hub) peered with Dev and Prod VPCs (spokes), with private test instances used to prove the isolation.',
+    problem: 'Dev and Prod environments need shared services, but a mistake in Dev must never be able to reach Prod. The design also had to stay at $0 for a learning account.',
+    solution: 'Three VPCs with non-overlapping CIDRs, built from one reusable Terraform VPC module. Shared peers with Dev and with Prod, with no Dev-Prod link. Because VPC peering is non-transitive, Dev cannot route through Shared to reach Prod. Test instances run in private subnets with no public IPs and are reached through an EC2 Instance Connect Endpoint (no bastion, no SSH keys). IMDSv2 is required and EBS volumes are encrypted.',
+    technologies: ['AWS', 'Terraform', 'VPC', 'VPC Peering', 'Route Tables', 'EC2', 'Security Groups', 'EC2 Instance Connect Endpoint'],
+    challenges: 'Proving that isolation comes from routing and not the firewall. Prod was deliberately allowed to accept ping from all internal ranges, so a failed Dev to Prod ping can only mean there is no route. Cost was kept at $0 by choosing peering over Transit Gateway, skipping NAT Gateways, using one AZ, and toggling test instances off with a Terraform variable.',
+    keyResults: ['Dev to Shared: 3/3 packets received (0% loss)', 'Dev to Prod: 0/3 received (100% loss), isolation proven', '18 resources managed as code with a reusable module', 'Private-only access, no public IPs or SSH keys', '$0 running cost'],
+  },
   'aws-three-tier': {
     title: 'AWS Three-Tier Web Application',
     overview: 'Designed a production-style AWS infrastructure following cloud best practices.',
@@ -94,10 +103,10 @@ const PROJECT_DETAILS = {
   'portfolio-website': {
     title: 'Personal Portfolio Website',
     overview: 'Designed and developed a fully responsive portfolio showcasing projects, certifications, technical skills, and professional experience.',
-    problem: null,
-    solution: null,
+    problem: 'Recruiters need one fast, clear place to see my certifications, experience, and real project work.',
+    solution: 'A static HTML, CSS, and JavaScript site with no build step, hosted for free on GitHub Pages. Project details open in an accessible modal driven by a single data object, so adding a new project is one card plus one entry.',
     technologies: ['HTML', 'CSS', 'JavaScript', 'Responsive Design', 'ScrollReveal', 'GitHub'],
-    challenges: null,
+    challenges: 'Fixed a mobile bug where hero content stayed invisible on Android Chrome: opacity-based keyframe animations left elements hidden when they did not trigger. Rewrote them as transform-only animations.',
     keyResults: ['Responsive UI', 'Dark Theme', 'Modern Animations', 'Contact Form', 'Resume Download', 'Smooth Navigation'],
   },
 }
