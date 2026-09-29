@@ -64,6 +64,15 @@ scrollTopBtn.addEventListener('click', () => {
 /* To add a project later: add its card in index.html, then add a matching
    entry here keyed by the same data-project value used on its Read More button. */
 const PROJECT_DETAILS = {
+  'aws-cicd-oidc': {
+    title: 'Keyless CI/CD: GitHub Actions + AWS OIDC',
+    overview: 'A CI/CD pipeline that deploys my serverless visitor counter API on every push, authenticating to AWS with OpenID Connect so no access keys are stored anywhere.',
+    problem: 'Deploying from a laptop with long-lived admin keys is risky and does not scale: keys can leak, never expire on their own, and there is no shared, locked Terraform state for automation.',
+    solution: 'A Terraform bootstrap creates a GitHub OIDC identity provider, a deploy role that trusts only my repository (by immutable IDs) on the main branch or pull requests, a versioned and encrypted S3 state bucket, and a DynamoDB lock table. The GitHub Actions workflow runs fmt, validate, and plan on pull requests, and plan, apply, and a live smoke test on main.',
+    technologies: ['GitHub Actions', 'OpenID Connect (OIDC)', 'AWS IAM', 'AWS STS', 'Terraform', 'Amazon S3', 'Amazon DynamoDB'],
+    challenges: 'The first run failed with AccessDenied on AssumeRoleWithWebIdentity. CloudTrail showed GitHub now sends a subject claim with immutable owner and repo IDs, so I updated the trust policy to match. That is also more secure, because a renamed or re-created repo cannot take over the role. The deploy role is scoped to only this project\'s Lambda, API, table, log group, and IAM role.',
+    keyResults: ['Zero stored AWS keys in GitHub', '1-hour credentials, only for one repo and branch', 'Push to deploy in under a minute, with a live API smoke test', 'Shared remote state with locking and versioning', '$0 (free OIDC and IAM, free Actions for public repos)'],
+  },
   'aws-sg-auto-remediation': {
     title: 'Security Group Auto-Remediation',
     overview: 'An event-driven security guardrail on AWS. When a security group rule opens SSH (22), RDP (3389), or all traffic to the internet, it is removed automatically and the team gets an email.',
