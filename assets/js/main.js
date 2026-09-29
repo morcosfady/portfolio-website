@@ -64,6 +64,15 @@ scrollTopBtn.addEventListener('click', () => {
 /* To add a project later: add its card in index.html, then add a matching
    entry here keyed by the same data-project value used on its Read More button. */
 const PROJECT_DETAILS = {
+  'aws-serverless-visitor-counter': {
+    title: 'Serverless Visitor Counter API',
+    overview: 'A live visitor counter for this portfolio, served by an AWS serverless API and deployed entirely with Terraform. The number in the footer comes from it.',
+    problem: 'A static site on GitHub Pages has no backend, so it cannot count or store visits. I wanted a real, always-on API without running or paying for a server.',
+    solution: 'The page calls an API Gateway HTTP API (GET /count). It triggers a Python Lambda that atomically adds 1 to a DynamoDB item and returns the new total. Terraform builds the Lambda zip and deploys all 10 resources in one command.',
+    technologies: ['AWS Lambda', 'API Gateway (HTTP API)', 'DynamoDB', 'Python', 'Terraform', 'IAM', 'CloudWatch Logs'],
+    challenges: 'Keeping it secure and free while exposing a public endpoint. The Lambda role can only run UpdateItem on one table, CORS only allows this site, and API throttling (5 req/s, burst 10) blocks abuse. An atomic ADD update avoids race conditions when two visitors arrive at once.',
+    keyResults: ['Live in production on this site', 'Least-privilege IAM (one action, one table)', 'CORS locked to my domain + throttling', 'Encrypted DynamoDB, 7-day log retention', 'About $0/month at portfolio traffic'],
+  },
   'aws-hub-spoke-network': {
     title: 'AWS Hub-and-Spoke Network (Terraform)',
     overview: 'A hub-and-spoke network on AWS built entirely with Terraform: a Shared services VPC (hub) peered with Dev and Prod VPCs (spokes), with private test instances used to prove the isolation.',
@@ -479,3 +488,18 @@ window.addEventListener('pageshow', (event) => {
   forceRevealedContentVisible()
   if (event.persisted) setTimeout(forceRevealedContentVisible, 300)
 })
+
+
+/*=============== VISITOR COUNTER (AWS API Gateway + Lambda + DynamoDB) ===============*/
+const VISITOR_API = 'https://ifcw8jlfai.execute-api.us-east-1.amazonaws.com/count'
+const visitorEl = document.getElementById('visitor-count')
+
+if (visitorEl) {
+  fetch(VISITOR_API)
+    .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+    .then((data) => {
+      visitorEl.querySelector('span').textContent = Number(data.count).toLocaleString()
+      visitorEl.hidden = false
+    })
+    .catch(() => { /* stay hidden if the API is unreachable */ })
+}

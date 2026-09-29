@@ -492,6 +492,30 @@
                   </div>
                </article>
 
+               <article class="projects__card">
+                  <div class="projects__card-image">
+                     <i class="ri-flashlight-line"></i>
+                  </div>
+                  <div class="projects__card-content">
+                     <h3 class="projects__card-title">Serverless Visitor Counter API</h3>
+                     <p class="projects__card-description">
+                        A live visitor counter for this site (see the footer) built on AWS serverless with Terraform: API Gateway, Lambda, and DynamoDB, locked down with least-privilege IAM, CORS, and throttling.
+                     </p>
+                     <div class="projects__card-tech">
+                        <span class="projects__tech-tag">AWS Lambda</span>
+                        <span class="projects__tech-tag">API Gateway</span>
+                        <span class="projects__tech-tag">DynamoDB</span>
+                        <span class="projects__tech-tag">Python</span>
+                        <span class="projects__tech-tag">Terraform</span>
+                        <span class="projects__tech-tag">IAM</span>
+                     </div>
+                     <div class="projects__card-buttons">
+                        <a href="https://github.com/morcosfady/aws-serverless-visitor-counter" target="_blank" rel="noopener noreferrer" class="projects__btn">GitHub</a>
+                        <button type="button" class="projects__btn projects__btn-primary projects__read-more" data-project="aws-serverless-visitor-counter">Read More</button>
+                     </div>
+                  </div>
+               </article>
+
                <!-- HIDDEN until built and on GitHub:
 <article class="projects__card">
                   <div class="projects__card-image">
@@ -728,6 +752,7 @@
       <footer class="footer">
          <div class="footer__container container">
             <p class="footer__copy">&copy; <span id="footer-year"></span> <span class="footer__name">Fady Morcos</span>. All Rights Reserved.</p>
+            <p class="footer__visits" id="visitor-count" hidden><i class="ri-eye-line"></i> <span></span> visitors &middot; <a href="https://github.com/morcosfady/aws-serverless-visitor-counter" target="_blank" rel="noopener noreferrer">powered by AWS Lambda + DynamoDB</a></p>
          </div>
       </footer>
 
