@@ -64,6 +64,15 @@ scrollTopBtn.addEventListener('click', () => {
 /* To add a project later: add its card in index.html, then add a matching
    entry here keyed by the same data-project value used on its Read More button. */
 const PROJECT_DETAILS = {
+  'aws-sg-auto-remediation': {
+    title: 'Security Group Auto-Remediation',
+    overview: 'An event-driven security guardrail on AWS. When a security group rule opens SSH (22), RDP (3389), or all traffic to the internet, it is removed automatically and the team gets an email.',
+    problem: 'One wrong security group rule can expose servers to the whole internet within seconds. Manual reviews are slow, and attackers scan for open SSH and RDP constantly.',
+    solution: 'CloudTrail records the AuthorizeSecurityGroupIngress API call, an EventBridge rule matches it and triggers a Python Lambda. The Lambda reads the current rules and revokes only the world-open ranges (0.0.0.0/0 or ::/0) on risky ports, then SNS emails who made the change and what was removed. Everything is deployed with Terraform.',
+    technologies: ['AWS CloudTrail', 'Amazon EventBridge', 'AWS Lambda', 'Amazon SNS', 'Amazon S3', 'Python', 'Terraform', 'IAM'],
+    challenges: 'Fixing only what is dangerous. A rule allowing SSH from an office IP, or HTTPS from anywhere, must stay untouched, so the Lambda removes just the internet-wide ranges on SSH/RDP/all-traffic rules. It re-reads current state before acting, so duplicate events are harmless.',
+    keyResults: ['Public SSH rule removed automatically within ~2 minutes', 'Email alert naming the SG and the IAM identity', 'Surgical fix: safe rules are kept', 'Least-privilege Lambda role, encrypted private log bucket', 'About $0 (free CloudTrail trail, logs expire in 7 days)'],
+  },
   'aws-serverless-visitor-counter': {
     title: 'Serverless Visitor Counter API',
     overview: 'A live visitor counter for this portfolio, served by an AWS serverless API and deployed entirely with Terraform. The number in the footer comes from it.',
